@@ -1,5 +1,5 @@
-import { store } from "quasar/wrappers";
-import { createStore } from "vuex";
+import { store } from 'quasar/wrappers'
+import { createStore } from 'vuex'
 
 // import example from './module-example'
 
@@ -11,17 +11,19 @@ import { createStore } from "vuex";
  * async/await or return a Promise which resolves
  * with the Store instance.
  */
+import devices from './devices'
 
 export default store(function (/* { ssrContext } */) {
   const Store = createStore({
     modules: {
       // example
+      devices
     },
 
     // enable strict mode (adds overhead!)
     // for dev mode and --debug builds only
-    strict: process.env.DEBUGGING,
-  });
+    strict: process.env.DEBUGGING
+  })
 
-  return Store;
-});
+  return Store
+})
