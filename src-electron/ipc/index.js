@@ -9,7 +9,7 @@ import { createServer, distoryServer } from '../tcp'
 ipcMain.handle('checkId', async (e, id) => {
   const exist = await db.list.find({ id: id })
   if (exist.length) {
-    return true
+    return exist[0]
   } else {
     return false
   }
@@ -18,7 +18,7 @@ ipcMain.handle('checkId', async (e, id) => {
 ipcMain.handle('checkIp', async (e, ip) => {
   const exist = await db.list.find({ ipaddress: ip })
   if (exist.length) {
-    return true
+    return exist[0]
   } else {
     return false
   }

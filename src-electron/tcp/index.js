@@ -51,7 +51,7 @@ function createServer(port) {
 
 function distoryServer() {
   for (let i in clients) {
-    clients[i].distory()
+    clients[i].destroy()
   }
   server.close(() => {
     console.log('server closed')

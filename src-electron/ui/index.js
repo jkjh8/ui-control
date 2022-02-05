@@ -24,7 +24,7 @@ function connect(ipaddress) {
 }
 
 function disconnect(ipaddress) {
-  console.log('disconnect', ipaddress)
+  console.log('disconnect', ipaddress, ui)
   return new Promise(async (resolve, reject) => {
     try {
       await db.list.update(

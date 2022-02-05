@@ -47,6 +47,14 @@ function createTrayMenu() {
   tray = new Tray(img_logo.resize({ width: 16, height: 16 }))
   tray.setToolTip('UI Control')
   tray.setContextMenu(trayMenu)
+
+  tray.on('click', () => {
+    if (BrowserWindow.fromId(1).isVisible()) {
+      BrowserWindow.fromId(1).hide()
+    } else {
+      BrowserWindow.fromId(1).show()
+    }
+  })
 }
 
 export { createTrayMenu }

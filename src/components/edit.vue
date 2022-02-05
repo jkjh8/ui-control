@@ -9,9 +9,9 @@
                 <q-icon name="svguse:icons.svg#ethernet" size="1.5rem" />
               </q-avatar>
               <div>
-                <div class="name" style="font-size: 1rem">장치 추가</div>
+                <div class="name" style="font-size: 1rem">장치 수정</div>
                 <div class="caption" style="font-size: 0.5rem">
-                  새로운 장치를 추가 합니다.
+                  장치를 설정을 수정합니다.
                 </div>
               </div>
             </div>
@@ -104,15 +104,13 @@ export default {
     })
 
     onMounted(async () => {
-      if (devices.value.length) {
-        device.value.id = devices.value.length + 1
-      }
+      console.log(props.item)
+      device.value = { ...props.item }
     })
 
     async function onOKClick(args) {
       let exist = await window.FN.checkId(args.id)
-      console.log(exist)
-      if (exist) {
+      if (exist && exist._id !== args._id) {
         return $q.notify({
           message: 'ID has already been used',
           caption: 'Please check the id again',
@@ -122,7 +120,7 @@ export default {
         })
       }
       exist = await window.FN.checkIp(args.ipaddress)
-      if (exist) {
+      if (exist && exist._id !== args._id) {
         return $q.notify({
           message: 'IP Address han already been used',
           caption: 'Please check the Ip Address again',

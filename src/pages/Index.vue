@@ -9,17 +9,36 @@
             </div>
             <div>
               <div class="listname">Client List</div>
-              <div class="caption">
-                총 {{ count }}대의 믹서가 등록되었습니다.
-              </div>
+              <div class="caption">{{ count }} Mixers registered</div>
             </div>
           </div>
-          <div>
-            <q-btn flat round icon="svguse:icons.svg#refresh" @click="refresh">
-              <q-tooltip>Refresh List</q-tooltip>
+          <div class="q-gutter-x-sm">
+            <q-btn
+              flat
+              round
+              size="sm"
+              icon="svguse:icons.svg#code"
+              @click="test"
+            >
+              <q-tooltip class="tooltip">Test Codes</q-tooltip>
             </q-btn>
-            <q-btn flat round icon="svguse:icons.svg#plus-circle" @click="add">
-              <q-tooltip>Add Device</q-tooltip>
+            <q-btn
+              flat
+              round
+              size="sm"
+              icon="svguse:icons.svg#refresh"
+              @click="refresh"
+            >
+              <q-tooltip class="tooltip">Refresh List</q-tooltip>
+            </q-btn>
+            <q-btn
+              flat
+              round
+              size="sm"
+              icon="svguse:icons.svg#plus-circle"
+              @click="add"
+            >
+              <q-tooltip class="tooltip">Add Device</q-tooltip>
             </q-btn>
           </div>
         </div>
@@ -40,6 +59,7 @@ import { useQuasar } from 'quasar'
 
 import Table from '../components/table.vue'
 import addDevice from '../components/add'
+import testDevice from '../components/test'
 
 export default defineComponent({
   name: 'PageIndex',
@@ -59,6 +79,12 @@ export default defineComponent({
           command: 'add',
           value: JSON.stringify(rt)
         })
+      })
+    }
+
+    function test() {
+      $q.dialog({
+        component: testDevice
       })
     }
 
@@ -94,6 +120,7 @@ export default defineComponent({
     return {
       add,
       count,
+      test,
       refresh
     }
   }

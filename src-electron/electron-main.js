@@ -51,7 +51,10 @@ function createWindow() {
   createTrayMenu()
 
   mainWindow.on('closed', () => {
-    // mainWindow = null
+    mainWindow = null
+  })
+
+  mainWindow.on('close', (e) => {
     if (mainWindow.isVisible()) {
       mainWindow.hide()
       e.preventDefault()

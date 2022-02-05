@@ -9,6 +9,7 @@
             filled
             dense
             type="number"
+            label="Server Port"
             :disable="serverStatus"
           ></q-input>
           <q-btn

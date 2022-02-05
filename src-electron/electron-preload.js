@@ -26,6 +26,11 @@ contextBridge.exposeInMainWorld('FN', {
       fn(...args)
     })
   },
+  replay: (fn) => {
+    ipcRenderer.on('replay', (event, ...args) => {
+      fn(...args)
+    })
+  },
   checkId: async (id) => {
     return await ipcRenderer.invoke('checkId', id)
   },
