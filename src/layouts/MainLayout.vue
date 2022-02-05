@@ -1,8 +1,15 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header class="bg-white text-grey-10 q-mt-md q-mx-lg">
-      <q-toolbar class="row justify-between items-start">
-        <q-img :src="url" style="height: 50px; max-width: 200px" />
+    <q-header class="bg-white text-grey-10">
+      <div
+        class="row no-wrap justify-between items-start"
+        style="padding: 2% 5% 0 5%"
+      >
+        <div style="width: 100%">
+          <q-img :src="url" style="height: 50px; max-width: 200px" />
+          <q-spinner-radio v-if="serverStatus" color="cyan" />
+        </div>
+
         <div class="q-gutter-x-md row no-wrap items-start">
           <q-input
             v-model="port"
@@ -13,16 +20,16 @@
             :disable="serverStatus"
           ></q-input>
           <q-btn
-            style="width: 6rem; height: 2.4rem"
+            style="width: 5rem; height: 2.4rem"
             :color="serverStatus ? 'green-10' : 'red-10'"
             @click="connectServer"
           >
-            <div style="font-size: 0.7rem">
+            <div style="font-size: 0.6rem">
               {{ serverStatus ? 'Disconnect' : 'Connect' }}
             </div>
           </q-btn>
         </div>
-      </q-toolbar>
+      </div>
     </q-header>
 
     <q-page-container>

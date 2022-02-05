@@ -17,7 +17,7 @@ try {
 
 let mainWindow
 
-import { createTrayMenu } from './menu'
+import { createMainMenu, createTrayMenu } from './menu'
 
 function createWindow() {
   /**
@@ -48,6 +48,7 @@ function createWindow() {
     })
   }
 
+  createMainMenu()
   createTrayMenu()
 
   mainWindow.on('closed', () => {

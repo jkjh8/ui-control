@@ -40,6 +40,13 @@
     row-key="_id"
     :pagination="{ rowPerPage: 20 }"
   >
+    <template #header-cell-status="props">
+      <q-th :props="props">
+        <div style="min-width: 150px">
+          {{ props.col.label }}
+        </div>
+      </q-th>
+    </template>
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td key="id" :props="props">
@@ -60,16 +67,31 @@
           {{ props.row.ipaddress }}
         </q-td>
         <q-td>
-          <div class="text-center">
-            {{ props.row.status }}
+          <div
+            class="row justify-center items-center q-gutter-x-sm"
+            style="min-width: 150px"
+          >
+            <span>
+              {{ props.row.status }}
+            </span>
             <span
               v-if="
                 props.row.status !== 'Connect' &&
                 props.row.status !== 'Disconnect' &&
                 props.row.status !== 'Close'
               "
+              class="row items-end"
             >
-              <q-spinner color="teal" size="1rem" :thickness="6" />
+              <!-- <Spin /> -->
+              <!-- <q-spinner color="teal" size="1rem" :thickness="6" /> -->
+              <svg class="loader" viewBox="0 0 24 24">
+                <circle class="loader__value" cx="12" cy="12" r="10" />
+                <circle class="loader__value" cx="12" cy="12" r="10" />
+                <circle class="loader__value" cx="12" cy="12" r="10" />
+                <circle class="loader__value" cx="12" cy="12" r="10" />
+                <circle class="loader__value" cx="12" cy="12" r="10" />
+                <circle class="loader__value" cx="12" cy="12" r="10" />
+              </svg>
             </span>
           </div>
         </q-td>
@@ -167,8 +189,59 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .tooltip {
   background: rgba(0, 0, 0, 0.5);
+}
+$loader-colors: dodgerblue, mediumspringgreen, crimson, peachpuff, chocolate,
+  pink;
+$loader-dash: 63;
+$loader-duration: length($loader-colors) * 1s;
+$loader-duration-alt: $loader-duration / length($loader-colors);
+$loader-keyframe: 1 / (length($loader-colors) * 2) * 100;
+
+.loader {
+  animation: loader-turn $loader-duration-alt linear infinite;
+  padding: 0rem;
+  max-width: 20px;
+  width: 100%;
+
+  @keyframes loader-turn {
+    50% {
+      transform: rotate(180deg);
+    }
+    100% {
+      transform: rotate(720deg);
+    }
+  }
+}
+
+.loader__value {
+  animation: loader-stroke $loader-duration linear infinite;
+  fill: none;
+  stroke-dasharray: $loader-dash;
+  stroke-dashoffset: $loader-dash;
+  stroke-linecap: round;
+  stroke-width: 4;
+
+  @for $i from 1 through length($loader-colors) {
+    &:nth-child(#{$i}) {
+      stroke: nth($loader-colors, $i);
+
+      @if $i > 1 {
+        animation-delay: ($i - 1) * $loader-duration-alt;
+      }
+    }
+  }
+
+  @keyframes loader-stroke {
+    #{$loader-keyframe * 1%} {
+      stroke-dashoffset: 0;
+    }
+    #{$loader-keyframe * 2%},
+    100% {
+      stroke-dashoffset: $loader-dash;
+    }
+  }
 }
 </style>

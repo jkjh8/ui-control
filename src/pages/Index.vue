@@ -1,8 +1,8 @@
 <template>
-  <q-page class="q-mx-md">
-    <q-card class="shadow-10" style="margin: 5% 5% 0 5%">
+  <q-page style="padding: 2% 5% 0 5%">
+    <q-card class="shadow-10">
       <q-card-section>
-        <div class="q-mx-md row no-wrap justify-between">
+        <div class="row no-wrap justify-between">
           <div class="q-gutter-x-sm row items-center">
             <div>
               <q-icon name="svguse:icons.svg#ethernet" size="md" />
