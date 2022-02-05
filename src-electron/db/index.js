@@ -11,7 +11,7 @@ function dbInit(file) {
 }
 
 const db = {
-  setup: dbInit('setup'),
+  setup: dbInit('uisetup'),
   list: dbInit('uilist')
 }
 

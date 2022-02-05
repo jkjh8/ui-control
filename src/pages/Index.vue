@@ -74,6 +74,13 @@ export default defineComponent({
             case 'list':
               commit('devices/updateDevices', args.value)
               break
+
+            case 'server':
+              commit('setup/updateServerStatus', args.status)
+              if (args.port) {
+                commit('setup/updateServerPort', args.port)
+              }
+              break
             default:
               console.log(args)
               break
