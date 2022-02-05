@@ -12,7 +12,7 @@ function dbInit(file) {
 
 const db = {
   setup: dbInit('setup'),
-  list: dbInit('list')
+  list: dbInit('uilist')
 }
 
 export default db

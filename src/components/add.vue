@@ -89,6 +89,7 @@ export default {
     const device = ref({
       name: '',
       ipaddress: '',
+      status: 'Disconnect',
       connected: false
     })
 

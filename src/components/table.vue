@@ -18,6 +18,13 @@
         sortable: true
       },
       {
+        name: 'status',
+        align: 'center',
+        label: 'Status',
+        field: 'status',
+        sortable: true
+      },
+      {
         name: 'actions',
         align: 'center',
         label: 'Actions'
@@ -34,20 +41,30 @@
         <q-td key="ipaddress" :props="props">
           {{ props.row.ipaddress }}
         </q-td>
+        <q-td>
+          <div class="text-center">
+            {{ props.row.status }}
+          </div>
+        </q-td>
         <q-td key="actions" :props="props">
           <q-btn
             round
             flat
-            :icon="
-              props.row.connected
-                ? 'svguse:icons.svg#check-circle'
-                : 'svguse:icons.svg#ban'
-            "
+            size="sm"
+            icon="svguse:icons.svg#connect"
             :color="props.row.connedted ? 'green' : 'red-10'"
+            @click="connect(props.row)"
           >
             <q-tooltip>Connect</q-tooltip>
           </q-btn>
-          <q-btn round flat icon="svguse:icons.svg#trash" color="red-10">
+          <q-btn
+            round
+            flat
+            icon="svguse:icons.svg#trash"
+            size="sm"
+            color="red-10"
+            @click="deleteDevice(props.row)"
+          >
             <q-tooltip>Delete</q-tooltip>
           </q-btn>
         </q-td>
@@ -57,12 +74,45 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { useQuasar } from 'quasar'
+
 export default {
   setup() {
-    const list = ref([])
+    const { state } = useStore()
+    const $q = useQuasar()
+
+    const list = computed(() => state.devices.devices)
+
+    function connect(device) {
+      if (!device.connected) {
+        window.FN.onRequest({
+          command: 'connect',
+          ipaddress: device.ipaddress,
+          status: device.status
+        })
+      }
+    }
+
+    function deleteDevice(device) {
+      $q.dialog({
+        title: 'Delete',
+        message: `Are you sure you want to delete ${device.ipaddress}`,
+        icon: 'trash',
+        cancel: true
+      }).onOk(() => {
+        window.FN.onRequest({ command: 'delete', value: device._id })
+      })
+    }
+
+    onMounted(() => {
+      window.FN.onRequest({ command: 'refresh' })
+    })
     return {
-      list
+      list,
+      connect,
+      deleteDevice
     }
   }
 }
