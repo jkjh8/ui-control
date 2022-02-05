@@ -27,6 +27,9 @@ contextBridge.exposeInMainWorld('FN', {
     })
   },
   checkId: async (id) => {
-    return await ipcRenderer.invoke('chechId', id)
+    return await ipcRenderer.invoke('checkId', id)
+  },
+  checkIp: async (ip) => {
+    return await ipcRenderer.invoke('checkIp', ip)
   }
 })

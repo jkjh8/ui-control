@@ -22,6 +22,15 @@
           <div class="q-mx-md q-mt-md">
             <div>
               <q-input
+                v-model="device.id"
+                dense
+                filled
+                type="number"
+                label="ID"
+                :rules="rules.required"
+                lazy-rules
+              />
+              <q-input
                 v-model="device.name"
                 dense
                 filled
@@ -87,6 +96,7 @@ export default {
     const devices = computed(() => state.devices.devices)
 
     const device = ref({
+      id: 1,
       name: '',
       ipaddress: '',
       status: 'Disconnect',
@@ -94,32 +104,31 @@ export default {
     })
 
     onMounted(async () => {
-      if (props.item) {
-        device.value = { ...device.value, ...props.item }
+      if (devices.value.length) {
+        device.value.id = devices.value.length
       }
     })
 
     async function onOKClick(args) {
-      for (let i = 0; i < devices.value.length; i++) {
-        if (devices.value[i].ipaddress == args.ipaddress) {
-          return $q.notify({
-            icon: 'svguse:icons.svg#exclamation',
-            message: '아이피가 중복되었습니다',
-            caption: '아이피를 확인해 주세요.',
-            positon: 'top',
-            color: 'nagative',
-            textColor: 'white',
-            actions: [
-              {
-                icon: 'close',
-                round: true,
-                size: 'sm',
-                color: 'white',
-                handler: () => {}
-              }
-            ]
-          })
-        }
+      let exist = await window.FN.checkId(args.id)
+      if (exist) {
+        return $q.notify({
+          message: 'ID has already been used',
+          caption: 'Please check the id again',
+          position: 'top',
+          color: 'negative',
+          textColor: 'white'
+        })
+      }
+      exist = await window.FN.checkIp(args.ipaddress)
+      if (exist) {
+        return $q.notify({
+          message: 'IP Address han already been used',
+          caption: 'Please check the Ip Address again',
+          position: 'top',
+          color: 'negative',
+          textColor: 'white'
+        })
       }
       onDialogOK(args)
     }

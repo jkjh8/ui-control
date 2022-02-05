@@ -6,8 +6,17 @@ import ui from '../ui'
 import { refreshList, addNewDevice } from '../functions'
 import { createServer, distoryServer } from '../tcp'
 
-ipcMain.on('checkId', async (e, id) => {
+ipcMain.handle('checkId', async (e, id) => {
   const exist = await db.list.find({ id: id })
+  if (exist.length) {
+    return true
+  } else {
+    return false
+  }
+})
+
+ipcMain.handle('checkIp', async (e, ip) => {
+  const exist = await db.list.find({ ipaddress: ip })
   if (exist.length) {
     return true
   } else {
