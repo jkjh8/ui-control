@@ -6,6 +6,15 @@ import ui from '../ui'
 import { refreshList, addNewDevice } from '../functions'
 import { createServer, distoryServer } from '../tcp'
 
+ipcMain.on('checkId', async (e, id) => {
+  const exist = await db.list.find({ id: id })
+  if (exist.length) {
+    return true
+  } else {
+    return false
+  }
+})
+
 ipcMain.on('onRequest', async (e, args) => {
   console.log('ipcmain', args)
   try {

@@ -25,5 +25,8 @@ contextBridge.exposeInMainWorld('FN', {
     ipcRenderer.on('onResponse', (event, ...args) => {
       fn(...args)
     })
+  },
+  checkId: async (id) => {
+    return await ipcRenderer.invoke('chechId', id)
   }
 })
