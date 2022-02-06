@@ -92,9 +92,9 @@ export default defineComponent({
       window.FN.onRequest({ command: 'refresh' })
     }
 
-    onBeforeMount(() => {
+    onBeforeMount(async () => {
       window.FN.onResponse((args) => {
-        console.log(args)
+        console.log('res', args)
         try {
           switch (args.command) {
             case 'list':
@@ -102,6 +102,7 @@ export default defineComponent({
               break
 
             case 'server':
+              console.log('server', args)
               commit('setup/updateServerStatus', args.status)
               if (args.port) {
                 commit('setup/updateServerPort', args.port)
@@ -115,6 +116,15 @@ export default defineComponent({
           console.error(e)
         }
       })
+
+      const r = await window.FN.checkServer()
+      if (r && r.status) {
+        window.FN.onRequest({ command: 'start_server', port: r.port })
+        commit('setup/updateServerStatus', r.status)
+        commit('setup/updateServerPort', r.port)
+      } else {
+        commit('setup/updateServerStatus', false)
+      }
     })
 
     return {

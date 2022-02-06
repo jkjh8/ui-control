@@ -20,6 +20,7 @@
             :disable="serverStatus"
           ></q-input>
           <q-btn
+            v-model="serverStatus"
             style="width: 5rem; height: 2.4rem"
             :color="serverStatus ? 'green-10' : 'red-10'"
             @click="connectServer"

@@ -36,5 +36,8 @@ contextBridge.exposeInMainWorld('FN', {
   },
   checkIp: async (ip) => {
     return await ipcRenderer.invoke('checkIp', ip)
+  },
+  checkServer: async () => {
+    return await ipcRenderer.invoke('checkServer')
   }
 })

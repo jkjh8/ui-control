@@ -1,6 +1,7 @@
 import { app, BrowserWindow, nativeTheme } from 'electron'
 import path from 'path'
 import os from 'os'
+import db from './db'
 
 import './ipc'
 
@@ -19,16 +20,25 @@ let mainWindow
 
 import { createMainMenu, createTrayMenu } from './menu'
 
-function createWindow() {
-  /**
-   * Initial window options
-   */
+async function createWindow() {
+  let bootOn = false
+  let startTray = false
+  const bos = await db.setup.findOne({ section: 'bootonstart' })
+  const swti = await db.setup.findOne({ section: 'startwithtrayicon' })
+
+  if (bos && bos.value) {
+    bootOn = bos.value
+  }
+  if (swti && swti.value) {
+    startTray = swti.value
+  }
 
   mainWindow = new BrowserWindow({
     icon: path.resolve(__dirname, 'icons/icon.png'), // tray icon
     width: 1000,
     height: 600,
     useContentSize: true,
+    show: !startTray,
     webPreferences: {
       contextIsolation: true,
       // More info: /quasar-cli/developing-electron-apps/electron-preload-script
@@ -48,7 +58,7 @@ function createWindow() {
     })
   }
 
-  createMainMenu()
+  createMainMenu(bootOn, startTray)
   createTrayMenu()
 
   mainWindow.on('closed', () => {

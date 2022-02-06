@@ -1,5 +1,6 @@
-import { app, Menu, Tray, nativeImage, BrowserWindow } from 'electron'
+import { app, Menu, Tray, nativeImage, BrowserWindow, dialog } from 'electron'
 import path from 'path'
+import db from '../db'
 
 const img_path = process.env.DEV ? 'public/menu' : process.resourcesPath
 
@@ -12,8 +13,12 @@ const img_logo = nativeImage.createFromPath(path.join(img_path, 'logo.png'))
 let mainMenu
 let trayMenu
 let tray
+let bootOn = false
+let startTray = false
 
-function createMainMenu() {
+async function createMainMenu(bos, swti) {
+  bootOn = bos
+  startTray = swti
   const isMac = process.platform === 'darwin'
   mainMenu = Menu.buildFromTemplate([
     ...(isMac
@@ -41,6 +46,55 @@ function createMainMenu() {
         { role: 'forceReload' },
         { role: 'toggleDevTools' },
         { type: 'separator' },
+        {
+          label: 'Boot On Start',
+          type: 'checkbox',
+          id: 'bootOnStart',
+          checked: bootOn,
+          click: async () => {
+            bootOn = !bootOn
+            app.setLoginItemSettings({
+              openAtLoad: bootOn,
+              path: app.getPath('exe')
+            })
+            await db.setup.update(
+              { section: 'bootonstart' },
+              { $set: { value: bootOn } },
+              { upsert: true }
+            )
+            changeMenuState()
+          }
+        },
+        {
+          label: 'Start With TrayIcon',
+          type: 'checkbox',
+          id: 'startWithTrayIcon',
+          checked: startTray,
+          click: async () => {
+            startTray = !startTray
+            await db.setup.update(
+              { section: 'startwithtrayicon' },
+              { $set: { value: startTray } },
+              { upsert: true }
+            )
+            changeMenuState()
+          }
+        },
+        {
+          label: 'show dialog',
+          type: 'normal',
+          click: () => {
+            dialog
+              .showMessageBox({
+                message: '123',
+                buttons: ['cancel', 'ok']
+              })
+              .then((r) => {
+                console.log(r)
+              })
+          }
+        },
+        { type: 'separator' },
         isMac
           ? {
               label: 'close',
@@ -48,9 +102,12 @@ function createMainMenu() {
               accelerator: 'alt+F4'
             }
           : {
-              role: 'quit',
+              label: 'Exit',
               icon: img_close.resize({ width: 16, height: 16 }),
-              accelerator: 'alt+F4'
+              accelerator: 'alt+F4',
+              click: () => {
+                app.exit(0)
+              }
             }
       ]
     },
@@ -119,29 +176,20 @@ function createMainMenu() {
 function createTrayMenu() {
   trayMenu = Menu.buildFromTemplate([
     {
-      label: '열기',
-      type: 'normal',
-      icon: img_show.resize({ width: 16, height: 16 }),
-      accelerator: 'CommandOrControl+O',
-      click: () => {
-        BrowserWindow.fromId(1).show()
-      }
-    },
-    {
-      label: '숨기기',
+      label: 'Hide & Show',
       type: 'normal',
       icon: img_hide.resize({ width: 16, height: 16 }),
-      accelerator: 'CommandOrControl+H',
+      // accelerator: 'CommandOrControl+H',
       click: () => {
-        BrowserWindow.fromId(1).hide()
+        hideNShow()
       }
     },
     { type: 'separator' },
     {
-      label: '종료',
+      label: 'Exit',
       type: 'normal',
       icon: img_close.resize({ width: 16, height: 16 }),
-      accelerator: 'alt+F4',
+      // accelerator: 'alt+F4',
       click: () => {
         app.exit(0)
       }
@@ -153,12 +201,21 @@ function createTrayMenu() {
   tray.setContextMenu(trayMenu)
 
   tray.on('click', () => {
-    if (BrowserWindow.fromId(1).isVisible()) {
-      BrowserWindow.fromId(1).hide()
-    } else {
-      BrowserWindow.fromId(1).show()
-    }
+    hideNShow()
   })
+}
+
+function hideNShow() {
+  if (BrowserWindow.fromId(1).isVisible()) {
+    BrowserWindow.fromId(1).hide()
+  } else {
+    BrowserWindow.fromId(1).show()
+  }
+}
+
+function changeMenuState() {
+  mainMenu.getMenuItemById('bootOnStart').checked = bootOn
+  mainMenu.getMenuItemById('startWithTrayIcon').checked = startTray
 }
 
 export { createMainMenu, createTrayMenu }

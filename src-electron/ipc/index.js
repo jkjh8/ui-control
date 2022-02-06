@@ -24,6 +24,15 @@ ipcMain.handle('checkIp', async (e, ip) => {
   }
 })
 
+ipcMain.handle('checkServer', async () => {
+  const r = await db.setup.findOne({ section: 'server' })
+  if (r && r.status) {
+    return { status: r.status, port: r.port }
+  } else {
+    return { status: false }
+  }
+})
+
 ipcMain.on('onRequest', async (e, args) => {
   console.log('ipcmain', args)
   try {
@@ -62,6 +71,6 @@ ipcMain.on('onRequest', async (e, args) => {
         console.log(args)
     }
   } catch (e) {
-    console.error(e)
+    console.error('ipc', e)
   }
 })
