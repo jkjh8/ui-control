@@ -47,6 +47,14 @@
                 :rules="rules.ipaddress"
                 lazy-rules
               />
+
+              <q-select
+                v-model="device.deviceType"
+                dense
+                filled
+                label="Device Type"
+                :options="['UI12', 'UI16', 'UI24']"
+              />
             </div>
           </div>
         </q-card-section>
@@ -99,6 +107,7 @@ export default {
       id: 1,
       name: '',
       ipaddress: '',
+      deviceType: 'UI24',
       status: 'Disconnect',
       connected: false
     })

@@ -1,7 +1,8 @@
 import { BrowserWindow } from 'electron'
 import net from 'net'
 import db from '../db'
-import parse from '../ui/parser'
+import ui from '../ui'
+
 import { errorDialog } from '../menu/dialog'
 
 let server
@@ -31,13 +32,19 @@ function createServer(port) {
 
       socket.on('data', async (data) => {
         console.log(data)
+        let args
         try {
-          const args = JSON.parse(data)
-          const r = await parse(args)
-          write(socket, r)
+          args = JSON.parse(data)
         } catch (e) {
           console.log(e)
-          write(socket, 'data type error')
+          write(socket, 'Not Json Type')
+        }
+        try {
+          const r = await ui.command(args)
+          write(socket, r)
+        } catch (e) {
+          console.error(e)
+          write(socket, e.message)
         }
       })
     })

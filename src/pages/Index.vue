@@ -74,6 +74,7 @@ export default defineComponent({
       $q.dialog({
         component: addDevice
       }).onOk((rt) => {
+        rt.id = Number(rt.id)
         console.log(rt)
         window.FN.onRequest({
           command: 'add',

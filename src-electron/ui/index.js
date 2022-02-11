@@ -1,22 +1,23 @@
 import { SoundcraftUI } from 'soundcraft-ui-connection'
 import db from '../db'
 import { refreshList } from '../functions'
+import master from './master'
 
-const ui = {}
+const uis = {}
 
 function connect(ipaddress) {
   return new Promise((resolve, reject) => {
     try {
-      if (ui[ipaddress]) {
-        ui[ipaddress].reconnect()
+      if (uis[ipaddress]) {
+        uis[ipaddress].reconnect()
       } else {
-        ui[ipaddress] = new SoundcraftUI(ipaddress)
-        ui[ipaddress].connect()
+        uis[ipaddress] = new SoundcraftUI(ipaddress)
+        uis[ipaddress].connect()
       }
-      ui[ipaddress].status$.subscribe(async (status) => {
+      uis[ipaddress].status$.subscribe(async (status) => {
         await parsing(ipaddress, status)
       })
-      resolve(ui)
+      resolve(uis)
     } catch (e) {
       reject(e)
     }
@@ -24,19 +25,19 @@ function connect(ipaddress) {
 }
 
 function disconnect(ipaddress) {
-  console.log('disconnect', ipaddress, ui)
+  console.log('disconnect', ipaddress, uis)
   return new Promise(async (resolve, reject) => {
     try {
       await db.list.update(
         { ipaddress: ipaddress },
         { $set: { status: 'Disconnect' } }
       )
-      if (ui[ipaddress]) {
+      if (uis[ipaddress]) {
         console.log('update')
-        ui[ipaddress].disconnect()
-        delete ui[ipaddress]
+        uis[ipaddress].disconnect()
+        delete uis[ipaddress]
       }
-      resolve(ui)
+      resolve(uis)
     } catch (e) {
       reject(e)
     }
@@ -94,4 +95,35 @@ async function parsing(ipaddress, args) {
   }
 }
 
-export default { connect, disconnect }
+async function command(args) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      setTimeout(() => {
+        reject({ e: 'timeout', message: 'Command Process Timeout' })
+      }, 5000)
+
+      if (!args.id) {
+        resolve('ID Error')
+      }
+      if (!args.bus) {
+        resolve('MixBus Error')
+      }
+
+      const ui = await db.list.findOne({ id: args.id })
+      // if (!uis[ui.ipaddress]) {
+      //   reject({ e: 'device', message: 'Device Not Connected' })
+      // }
+
+      if (args.bus === 'master') {
+        const rt = master(uis[ui.ipaddress], args)
+        if (rt) {
+          resolve(rt)
+        }
+      }
+    } catch (e) {
+      reject({ e: 'command', message: e })
+    }
+  })
+}
+
+export default { connect, disconnect, command }

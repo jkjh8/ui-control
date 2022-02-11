@@ -25,6 +25,13 @@
         sortable: true
       },
       {
+        name: 'deviceType',
+        align: 'center',
+        label: 'Device Type',
+        field: 'deviceType',
+        sortable: true
+      },
+      {
         name: 'status',
         align: 'center',
         label: 'Status',
@@ -66,6 +73,11 @@
         <q-td key="ipaddress" :props="props">
           {{ props.row.ipaddress }}
         </q-td>
+        <q-td key="deviceType" :props="props">
+          {{ props.row.deviceType }}
+        </q-td>
+
+        <!-- status -->
         <q-td>
           <div
             class="row justify-center items-center q-gutter-x-sm"
@@ -161,6 +173,7 @@ export default {
         component: edit,
         componentProps: { item: item }
       }).onOk((rt) => {
+        rt.id = Number(rt.id)
         window.FN.onRequest({ command: 'add', value: JSON.stringify(rt) })
       })
     }
