@@ -1,151 +1,175 @@
-function checkNumber(value) {
-  if (value >= 0 && value <= 1) {
-    return true
-  } else {
-    return false
-  }
-}
+import func from './functions'
 
-function checkDB(value) {
-  if (value <= 10) {
-    return true
-  } else {
-    false
-  }
-}
-
-function checkTime(value) {
-  if (value > 0) {
-    return value
-  } else {
-    return 0
-  }
-}
-
-function checkValue(value) {
-  if (value == 1) {
-    return 1
-  } else {
-    return 0
-  }
-}
-
-function master(ui, args) {
+async function master(ui, device, args) {
   try {
-    console.log(ui, args)
-    if (!args.command) {
-      return 'Command Error'
+    let error
+    let rt
+
+    const command = args.command.toLowerCase()
+    switch (command) {
+      case 'setfaderlevel':
+        rt = await func.setFaderLevel(ui, device, args.value)
+        break
+      case 'setfaderleveldb':
+        rt = await func.setFaderLevelDB(ui, device, args.value)
+        break
+      case 'changefaderleveldb':
+        rt = await func.changeFaderLevelDB(ui, device, args.value)
+        break
+      case 'fadeto':
+        rt = await func.fadeTo(ui, device, args.value, args.time)
+        break
+      case 'fadetodb':
+        rt = await func.fadeToDB(ui, device, args.value, args.time)
+        break
+      case 'pan':
+        rt = await func.pan(ui, device, args.value)
+        break
+      case 'dim':
+        rt = await func.dim(ui, device)
+        break
+
+      case 'undim':
+        rt = await func.undim(ui, device)
+        break
+      case 'toggledim':
+        rt = await func.toggleDim(ui, device)
+        break
+      case 'setdim':
+        rt = await func.setDim(ui, device, args.value)
+        break
+      case 'getfaderlevel':
+        rt = await func.faderLevel$(ui, device)
+        break
+      case 'getfaderleveldb':
+        rt = await func.faderLevelDB$(ui, device)
+        break
+      case 'getpan':
+        rt = await func.pan$(ui, device)
+        break
+      case 'getdim':
+        rt = func.dim$(ui, device)
+        break
+      default:
+        error = 'Unknown Command'
+        break
     }
 
-    if (args.channeltype) {
-      // channel function
+    if (error) {
+      return error
     } else {
-      const command = args.command.toLowerCase()
-
-      // set master fader
-      if (command === 'setfaderlevel') {
-        if (checkNumber(args.value)) {
-          ui.master.setFaderLevel(args.value)
-          return 'OK'
-        } else {
-          return 'Value Error'
-        }
-      }
-
-      if (command === 'setfaderleveldb') {
-        if (args.value <= 10) {
-          ui.master.setFaderLevelDB(args.value)
-          return 'OK'
-        } else {
-          return 'Value Error'
-        }
-      }
-
-      if (command === 'changefaderleveldb') {
-        if (args.value <= 0) {
-          ui.master.changeFaderLevelDB(args.value)
-          return 'OK'
-        } else {
-          return 'Value Error'
-        }
-      }
-
-      if (command === 'fadeto') {
-        let time = 0
-        if (args.time && args.time > 0) {
-          time = args.time
-        }
-        if (args.value >= 0 && args.value <= 1) {
-          ui.master.fadeTo(args.value, time)
-          return 'OK'
-        } else {
-          return 'Value Error'
-        }
-      }
-
-      if (command === 'fadetodb') {
-        if (checkDB(args.value)) {
-          ui.master.fadeToDB(args.value, checkTime(args.time))
-          return 'OK'
-        } else {
-          return 'Value Error'
-        }
-      }
-
-      // panorama
-      if (command === 'pan') {
-        if (args.value >= 0 && args.value <= 1) {
-          ui.master.pan(args.value)
-          return 'OK'
-        } else {
-          return 'Value Error'
-        }
-      }
-
-      // dim
-      if (command === 'dim') {
-        ui.master.dim()
-      }
-      if (command === 'undim') {
-        ui.master.undim()
-      }
-      if (command === 'toggledim') {
-        ui.master.toggleDim()
-      }
-      if (command === 'setdim') {
-        ui.master.setDim(checkValue(args.value))
-      }
-
-      // get
-      if (command === 'getfaderlevel') {
-        ui.master.faderLevel$.subscribe((value) => {
-          return value
-        })
-      }
-
-      if (command === 'getfaderleveldb') {
-        ui.master.faderLevelDB$.subscribe((value) => {
-          return value
-        })
-      }
-
-      if (command === 'getpan') {
-        ui.master.pan$.subscribe((value) => {
-          return value
-        })
-      }
-
-      if (command === 'getdim') {
-        ui.master.dim$.subscribe((value) => {
-          return value
-        })
-      }
-
-      return 'Unknown Command'
+      return rt
     }
   } catch (e) {
     console.error(e)
+    return e
   }
 }
 
-export default master
+async function masterchannels(ui, device, args) {
+  try {
+    let error
+    let rt
+    let current
+    const type = args.channeltype.toLowerCase()
+    const channel = Number(args.channel)
+    if (!channel) {
+      return 'Please Select Channel'
+    }
+
+    switch (type) {
+      case 'input':
+        current = ui.input(channel)
+        break
+      case 'line':
+        current = ui.line(channel)
+        break
+      case 'player':
+        current = ui.player(channel)
+        break
+      case 'aux':
+        current = ui.aux(channel)
+        break
+      case 'fx':
+        current = ui.fx(channel)
+        break
+      case 'sub':
+        current = ui.sub(channel)
+        break
+      case 'vca':
+        current = ui.vca(channel)
+        break
+      default:
+        error = 'Unknown Channel'
+    }
+
+    if (error) {
+      return error
+    }
+
+    const command = args.command.toLowerCase()
+    switch (command) {
+      case 'setfaderlevel':
+        rt = await func.setFaderLevel(current, device, args.value)
+        break
+      case 'setfaderleveldb':
+        rt = await func.setFaderLevelDB(current, device, args.value)
+        break
+      case 'changefaderleveldb':
+        rt = await func.changeFaderLevelDB(current, device, args.value)
+        break
+      case 'fadeto':
+        rt = await func.fadeTo(current, device, args.value, args.time)
+        break
+      case 'fadetodb':
+        rt = await func.fadeToDB(current, device, args.value, args.time)
+        break
+      case 'pan':
+        rt = await func.pan(current, device, args.value)
+        break
+      case 'mute':
+        rt = await func.mute(current, device)
+        break
+      case 'unmute':
+        rt = await func.unmute(current, device)
+        break
+      case 'togglemute':
+        rt = await func.toggleMute(current, device)
+        break
+      case 'setmute':
+        rt = await func.setMute(current, device, args.value)
+        break
+
+      // subscribe
+      case 'getfaderlevel':
+        rt = await func.faderLevel$(current, device)
+        break
+      case 'getfaderleveldb':
+        rt = await func.faderLevelDB$(current, device)
+        break
+      case 'getpan':
+        rt = await func.pan$(current, device)
+        break
+      case 'getdim':
+        rt = func.dim$(current, device)
+        break
+      case 'getmute':
+        rt = await func.mute$(current, device)
+        break
+
+      default:
+        error = 'Unknown Command'
+        break
+    }
+
+    if (error) {
+      return error
+    } else {
+      return rt
+    }
+  } catch (e) {
+    console.error(e)
+    return e
+  }
+}
+export { master, masterchannels }

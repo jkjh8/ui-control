@@ -50,7 +50,7 @@ ipcMain.on('onRequest', async (e, args) => {
         await refreshList()
         break
       case 'connect':
-        if (args.status !== 'Disconnect') {
+        if (args.status !== 'Disconnect' && args.status !== 'Close') {
           await ui.disconnect(args.ipaddress)
         } else {
           await db.list.update(
@@ -60,6 +60,15 @@ ipcMain.on('onRequest', async (e, args) => {
           await ui.connect(args.ipaddress)
         }
         refreshList()
+        break
+      // check last status and connect at start
+      case 'start':
+        const devices = await db.list.find()
+        devices.forEach(async (device) => {
+          if (device.status === 'Connect') {
+            await ui.connect(device.ipaddress)
+          }
+        })
         break
       case 'start_server':
         createServer(args.port)

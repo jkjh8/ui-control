@@ -119,6 +119,7 @@ export default defineComponent({
       })
 
       const r = await window.FN.checkServer()
+      await window.FN.onRequest({ command: 'start' })
       if (r && r.status) {
         window.FN.onRequest({ command: 'start_server', port: r.port })
         commit('setup/updateServerStatus', r.status)

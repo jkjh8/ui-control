@@ -1,7 +1,7 @@
 import { SoundcraftUI } from 'soundcraft-ui-connection'
 import db from '../db'
 import { refreshList } from '../functions'
-import master from './master'
+import { master, masterchannels } from './master'
 
 const uis = {}
 
@@ -50,7 +50,7 @@ async function parsing(ipaddress, args) {
       case 'OPEN':
         await db.list.update(
           { ipaddress: ipaddress },
-          { $set: { status: 'Connecting' } }
+          { $set: { status: 'Connect' } }
         )
         break
       case 'OPNING':
@@ -102,11 +102,12 @@ async function command(args) {
         reject({ e: 'timeout', message: 'Command Process Timeout' })
       }, 5000)
 
+      let bus
+      let error = null
+      let rt = null
+
       if (!args.id) {
         resolve('ID Error')
-      }
-      if (!args.bus) {
-        resolve('MixBus Error')
       }
 
       const ui = await db.list.findOne({ id: args.id })
@@ -114,12 +115,67 @@ async function command(args) {
       //   reject({ e: 'device', message: 'Device Not Connected' })
       // }
 
-      if (args.bus === 'master') {
-        const rt = master(uis[ui.ipaddress], args)
-        if (rt) {
-          resolve(rt)
-        }
+      switch (args.bus) {
+        case 'master':
+          bus = uis[ui.ipaddress].master
+          if (args.channeltype) {
+            rt = await masterchannels(bus, ui, args)
+          } else {
+            rt = await master(bus, ui, args)
+          }
+          break
+        case 'aux':
+          if (!args.buschannel) {
+            error = 'AUX Buses Channel Error'
+          }
+          bus = ui.aux(args.buschannel)
+          break
+        case 'fx':
+          if (!args.buschannel) {
+            error = 'FX Buses Channel Error'
+          }
+          bus = ui.fx(args.buschannel)
+          break
+        case 'hw':
+          if (!args.buschannel) {
+            error = 'HW Buses Channel Error'
+          }
+          bus = ui.hw(args.buschannel)
+          break
+        case 'solo':
+          bus = ui.volume.solo
+          break
+        case 'headphone':
+          if (!args.buschannel) {
+            error = 'HEADPHONE Buses Channel Error'
+          }
+          bus = ui.volume.headphone(args.buschannel)
+          break
+        case 'mutegroup':
+          if (!args.buschannel) {
+            error = 'MUTEGROUP Buses Channel Error'
+          }
+          bus = ui.mutegroup(args.buschannel)
+          break
+        case 'player':
+          bus = ui.player
+          break
+        default:
+          error = 'Unknown Mix Bus'
       }
+
+      if (error) {
+        reject(error)
+      } else {
+        resolve(rt)
+      }
+
+      // if (args.bus === 'master') {
+      //   const rt = await master(uis[ui.ipaddress], ui, args)
+      //   if (rt) {
+      //     resolve(rt)
+      //   }
+      // }
     } catch (e) {
       reject({ e: 'command', message: e })
     }
