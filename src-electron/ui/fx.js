@@ -1,6 +1,6 @@
 import func from './functions'
 
-async function master(ui, device, args) {
+async function fx_master(ui, device, args) {
   try {
     let error
     let rt
@@ -22,22 +22,60 @@ async function master(ui, device, args) {
       case 'fadetodb':
         rt = await func.fadeToDB(ui, device, args.value, args.time)
         break
+      case 'mute':
+        rt = await func.mute(ui, device)
+        break
+      case 'unmute':
+        rt = await func.unmute(ui, device)
+        break
+      case 'setmute':
+        rt = await func.setMute(ui, device, value)
+        break
+      case 'togglemute':
+        rt = await func.toggleMute(ui, device)
+        break
       case 'pan':
         rt = await func.pan(ui, device, args.value)
         break
-      case 'dim':
-        rt = await func.dim(ui, device)
+      case 'solo':
+        rt = await func.solo(current, device)
+        break
+      case 'unsolo':
+        rt = await func.unsolo(current, device)
+        break
+      case 'togglesolo':
+        rt = await func.toggleSolo(current, device)
         break
 
-      case 'undim':
-        rt = await func.undim(ui, device)
+      // aux
+      case 'pre':
+        rt = await func.pre(current, device)
         break
-      case 'toggledim':
-        rt = await func.toggleDim(ui, device)
+
+      case 'post':
+        rt = await func.post(current, device)
         break
-      case 'setdim':
-        rt = await func.setDim(ui, device, args.value)
+
+      case 'togglepost':
+        rt = await func.togglePost(current, device)
         break
+
+      case 'setpost':
+        rt = await func.setPost(current, device, args.value)
+        break
+
+      case 'preproc':
+        rt = await func.preProc(current, device)
+        break
+
+      case 'postproc':
+        rt = await func.postProc(current, device)
+        break
+
+      case 'setpostproc':
+        rt = await func.setPostProc(current, device, args.value)
+        break
+
       case 'getfaderlevel':
         rt = await func.faderLevel$(ui, device)
         break
@@ -47,9 +85,16 @@ async function master(ui, device, args) {
       case 'getpan':
         rt = await func.pan$(ui, device)
         break
-      case 'getdim':
-        rt = func.dim$(ui, device)
+      case 'getmute':
+        rt = await func.mute$(current, device)
         break
+      case 'getsolo':
+        rt = await func.solo$(currnet, device)
+        break
+      case 'getpost':
+        rt = await func.post$(current, device)
+        break
+
       default:
         error = 'Unknown Command'
         break
@@ -66,7 +111,7 @@ async function master(ui, device, args) {
   }
 }
 
-async function masterchannels(ui, device, args) {
+async function fx_channels(ui, device, args) {
   try {
     let error
     let rt
@@ -87,17 +132,8 @@ async function masterchannels(ui, device, args) {
       case 'player':
         current = ui.player(channel)
         break
-      case 'aux':
-        current = ui.aux(channel)
-        break
-      case 'fx':
-        current = ui.fx(channel)
-        break
       case 'sub':
         current = ui.sub(channel)
-        break
-      case 'vca':
-        current = ui.vca(channel)
         break
       default:
         error = 'Unknown Channel'
@@ -139,17 +175,33 @@ async function masterchannels(ui, device, args) {
       case 'setmute':
         rt = await func.setMute(current, device, args.value)
         break
-      case 'setsolo':
-        rt = await func.setSolo(current, device, args.value)
+
+      case 'pre':
+        rt = await func.pre(current, device)
         break
-      case 'solo':
-        rt = await func.solo(current, device)
+
+      case 'post':
+        rt = await func.post(current, device)
         break
-      case 'unsolo':
-        rt = await func.unsolo(current, device)
+
+      case 'togglepost':
+        rt = await func.togglePost(current, device)
         break
-      case 'togglesolo':
-        rt = await func.toggleSolo(current, device)
+
+      case 'setpost':
+        rt = await func.setPost(current, device, args.value)
+        break
+
+      case 'preproc':
+        rt = await func.preProc(current, device)
+        break
+
+      case 'postproc':
+        rt = await func.postProc(current, device)
+        break
+
+      case 'setpostproc':
+        rt = await func.setPostProc(current, device, args.value)
         break
 
       // subscribe
@@ -165,10 +217,10 @@ async function masterchannels(ui, device, args) {
       case 'getmute':
         rt = await func.mute$(current, device)
         break
-      case 'getsolo':
-        rt = await func.solo$(currnet, device)
-        break
 
+      case 'getpost':
+        rt = await func.post$(current, device)
+        break
       default:
         error = 'Unknown Command'
         break
@@ -184,4 +236,4 @@ async function masterchannels(ui, device, args) {
     return e
   }
 }
-export { master, masterchannels }
+export { fx_master, fx_channels }

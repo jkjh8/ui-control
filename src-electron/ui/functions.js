@@ -569,7 +569,7 @@ function setAuto(ui, device) {
   })
 }
 
-function recordToggle(ui, device, value) {
+function recordToggle(ui, device) {
   return new Promise((resolve, reject) => {
     try {
       ui.recordToggle()

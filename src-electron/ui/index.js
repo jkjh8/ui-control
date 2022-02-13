@@ -2,6 +2,14 @@ import { SoundcraftUI } from 'soundcraft-ui-connection'
 import db from '../db'
 import { refreshList } from '../functions'
 import { master, masterchannels } from './master'
+import { aux_master, aux_channels } from './auxes'
+import { fx_master, fx_channels } from './fx'
+import hardware from './hw'
+import solo from './solo'
+import muteGroup from './muteGroup'
+import player from './player'
+import recorder from './record'
+import show from './show'
 
 const uis = {}
 
@@ -127,38 +135,65 @@ async function command(args) {
         case 'aux':
           if (!args.buschannel) {
             error = 'AUX Buses Channel Error'
+          } else {
+            bus = uis[ui.ipaddress].aux(args.buschannel)
+            if (args.channeltype) {
+              rt = await aux_channels(bus, ui, args)
+            } else {
+              rt = await aux_master(bus, ui, args)
+            }
           }
-          bus = ui.aux(args.buschannel)
           break
         case 'fx':
           if (!args.buschannel) {
             error = 'FX Buses Channel Error'
+          } else {
+            bus = uis[ui.ipaddress].fx(args.buschannel)
+            if (args.channeltype) {
+              rt = await fx_channels(bus, ui, args)
+            } else {
+              rt = await fx_master(bus, ui, args)
+            }
           }
-          bus = ui.fx(args.buschannel)
           break
         case 'hw':
           if (!args.buschannel) {
             error = 'HW Buses Channel Error'
           }
-          bus = ui.hw(args.buschannel)
+          bus = uis[ui.ipaddress].hw(args.buschannel)
+          rt = await hardware(bus, ui, args)
           break
         case 'solo':
-          bus = ui.volume.solo
+          rt = await solo(uis[ui.ipaddress].solo, ui, args)
           break
         case 'headphone':
           if (!args.buschannel) {
             error = 'HEADPHONE Buses Channel Error'
           }
-          bus = ui.volume.headphone(args.buschannel)
+          rt = await solo(
+            uis[ui.ipaddress].headphone(args.buschannel),
+            ui,
+            args
+          )
           break
         case 'mutegroup':
           if (!args.buschannel) {
             error = 'MUTEGROUP Buses Channel Error'
           }
-          bus = ui.mutegroup(args.buschannel)
+          rt = await muteGroup(
+            uis[ui.ipaddress].muteGroup(args.buschannel),
+            ui,
+            args
+          )
           break
         case 'player':
-          bus = ui.player
+          rt = await player(uis[ui.ipaddress].player, ui, args)
+          break
+        case 'recorder':
+          rt = await recorder(uis[ui.ipaddress].recorderDualTrack, ui, args)
+          break
+        case 'show':
+          rt = await show(uis[ui.ipaddress].shows, ui, args)
           break
         default:
           error = 'Unknown Mix Bus'
