@@ -119,9 +119,9 @@ async function command(args) {
       }
 
       const ui = await db.list.findOne({ id: args.id })
-      // if (!uis[ui.ipaddress]) {
-      //   reject({ e: 'device', message: 'Device Not Connected' })
-      // }
+      if (!uis[ui.ipaddress]) {
+        reject({ e: 'device', message: 'Device Not Connected' })
+      }
 
       switch (args.bus) {
         case 'master':

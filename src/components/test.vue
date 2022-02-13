@@ -18,8 +18,9 @@
       </q-card-section>
 
       <q-card-section>
-        <div class="q-mx-md q-mt-md q-gutter-y-md">
+        <div class="q-mx-md q-mt-md q-gutter-y-sm">
           <div>
+            <!-- Device -->
             <q-select
               v-model="selected"
               dense
@@ -27,6 +28,7 @@
               :options="devices"
               emit-value
               map-options
+              label="Device"
             >
               <template #selected-item="scope">
                 <q-item dense>
@@ -61,11 +63,62 @@
               </template>
             </q-select>
           </div>
-          <q-input v-model="code" dense filled label="Code">
-            <template #append>
-              <q-icon class="cursor-pointer" name="send" @click="send" />
-            </template>
-          </q-input>
+          <q-select
+            v-model="bus"
+            filled
+            dense
+            label="Mix Bus"
+            :options="[
+              'master',
+              'aux',
+              'fx',
+              'player',
+              'mutegroup',
+              'recorder',
+              'hardware',
+              'show',
+              'solo'
+            ]"
+          />
+          <!-- channel type -->
+          <q-select
+            v-if="bus === 'master'"
+            v-model="channeltype"
+            filled
+            dense
+            label="Channel Type"
+            :options="['input', 'line', 'player', 'aux', 'fx', 'sub', 'vca']"
+            clearable
+          />
+          <!-- channel -->
+          <q-input
+            v-if="channeltype"
+            v-model="channel"
+            filled
+            dense
+            label="Channel"
+            type="number"
+          />
+          <!-- command -->
+          <q-select
+            v-model="command"
+            filled
+            dense
+            label="Command"
+            :options="['setfaderleveldb', 'pan', 'getfaderleveldb', 'getpan']"
+          />
+          <!--  value  -->
+          <q-input
+            v-if="command === 'setfaderleveldb' || command === 'pan'"
+            v-model="value"
+            filled
+            dense
+            label="Command Value"
+            type="number"
+          />
+          <q-btn class="full-width" rounded unelevated color="primary"
+            >SEND</q-btn
+          >
         </div>
       </q-card-section>
 
@@ -105,7 +158,7 @@
 
 <script>
 import { useQuasar, useDialogPluginComponent } from 'quasar'
-import { ref, computed, onMounted } from 'vue'
+import { ref, reactive, toRefs, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
 export default {
@@ -122,6 +175,19 @@ export default {
     const selected = ref(null)
     const replay = ref('')
     const code = ref('')
+    const command = reactive({
+      bus: '',
+      buschannel: null,
+      channeltype: '',
+      channel: null,
+      value: null,
+      list: null,
+      showname: null,
+      snapshot: null,
+      cue: null,
+      time: null,
+      command: null
+    })
 
     function send() {
       window.FN.onRequest({
@@ -138,6 +204,7 @@ export default {
     })
 
     return {
+      ...toRefs(command),
       replay,
       selected,
       devices,

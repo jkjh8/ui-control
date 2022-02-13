@@ -8,25 +8,25 @@ async function show(ui, device, args) {
     const command = args.command.toLowerCase()
     switch (command) {
       case 'loadshow':
-        if (!args.show) {
+        if (!args.showname) {
           error = 'Unknown Show'
           break
         }
-        rt = await func.loadShow(ui, device, args.show)
+        rt = await func.loadShow(ui, device, args.showname)
         break
       case 'loadsnapshot':
         if (!args.snapshot) {
           error = 'Unknown Snapshot'
           break
         }
-        if (!args.show) {
+        if (!args.showname) {
           error = 'Unknown Show'
           break
         }
-        rt = await func.loadSnapshot(ui, device, args.show, args.snapshot)
+        rt = await func.loadSnapshot(ui, device, args.showname, args.snapshot)
         break
       case 'loadcue':
-        if (!args.show) {
+        if (!args.showname) {
           error = 'Unknown Show'
           break
         }
@@ -34,7 +34,7 @@ async function show(ui, device, args) {
           error = 'Unknown Cue'
           break
         }
-        rt = await func.loadCue(ui, device, args.show, args.cue)
+        rt = await func.loadCue(ui, device, args.showname, args.cue)
         break
 
       default:
