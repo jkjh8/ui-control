@@ -60,6 +60,7 @@ import { useQuasar } from 'quasar'
 import Table from '../components/table.vue'
 import addDevice from '../components/add'
 import testDevice from '../components/test'
+import help from '../components/help.vue'
 
 export default defineComponent({
   name: 'PageIndex',
@@ -89,6 +90,12 @@ export default defineComponent({
       })
     }
 
+    function fnHelp() {
+      $q.dialog({
+        component: help
+      })
+    }
+
     function refresh() {
       window.FN.onRequest({ command: 'refresh' })
     }
@@ -108,6 +115,9 @@ export default defineComponent({
               if (args.port) {
                 commit('setup/updateServerPort', args.port)
               }
+              break
+            case 'help':
+              fnHelp()
               break
             default:
               console.log(args)

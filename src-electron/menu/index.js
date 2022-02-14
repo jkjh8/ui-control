@@ -165,6 +165,16 @@ async function createMainMenu(bos, swti) {
             const { shell } = require('electron')
             await shell.openExternal('https://electronjs.org')
           }
+        },
+        {
+          label: 'Help',
+          type: 'normal',
+          accelerator: 'F1',
+          click: () => {
+            BrowserWindow.fromId(1).webContents.send('onResponse', {
+              command: 'help'
+            })
+          }
         }
       ]
     }

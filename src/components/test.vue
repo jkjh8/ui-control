@@ -17,8 +17,10 @@
         </div>
       </q-card-section>
 
+      <q-separator />
+
       <q-card-section>
-        <div class="q-mx-md q-mt-md q-gutter-y-sm">
+        <div class="q-mx-md q-gutter-y-sm">
           <div>
             <!-- Device -->
             <q-select
@@ -350,27 +352,30 @@
             label="Play Mode"
             :options="['manual', 'auto']"
           />
-          <div
-            class="q-gutter-x-sm"
-            style="max-width: 350px; word-break: break-all"
-          >
-            <span ref="testCode">
-              {{ code }}
-            </span>
-            <span>
-              <q-btn
-                round
-                flat
-                icon="svguse:icons.svg#copy"
-                size="sm"
-                color="green-10"
-                @click="fnCopy(code)"
+        </div>
+      </q-card-section>
+      <q-separator />
+      <q-card-section class="q-py-sm">
+        <div class="q-mx-md q-gutter-y-sm">
+          <div class="row justify-between items-center text-grey">
+            <div style="font-size: 0.5rem">Code</div>
+            <q-btn
+              round
+              flat
+              icon="svguse:icons.svg#copy"
+              size="sm"
+              color="green-10"
+              @click="fnCopy(code)"
+            >
+              <q-tooltip
+                style="background: rgba(0, 0, 0, 0.5); font-size: 0.5rem"
               >
-                <q-tooltip style="background: rgba(0, 0, 0, 0.5)">
-                  COPY
-                </q-tooltip>
-              </q-btn>
-            </span>
+                COPY
+              </q-tooltip>
+            </q-btn>
+          </div>
+          <div class="q-mx-xs" style="max-width: 350px; word-break: break-all">
+            {{ code }}
           </div>
           <q-btn
             class="full-width"
@@ -382,29 +387,20 @@
           >
         </div>
       </q-card-section>
+      <q-separator />
 
-      <q-card-section>
-        <div class="bg-grey-2 q-mx-md" style="height: 3rem">
-          <div
-            class="text-grey-6"
-            style="
-              position: absolute;
-              top: 0.2rem;
-              left: 2.8rem;
-              font-size: 0.8rem;
-            "
-          >
-            Re
-          </div>
-          <div style="position: absolute; top: 1.5rem; left: 3rem">
+      <q-card-section class="q-pb-none">
+        <div class="q-mx-md" style="height: 3rem">
+          <div class="text-grey" style="font-size: 0.5rem">Replay</div>
+          <div class="q-mx-xs" style="max-width: 350px; word-break: break-all">
             {{ replay }}
           </div>
         </div>
       </q-card-section>
 
       <!-- buttons example -->
-      <q-card-actions align="right">
-        <div class="q-mx-sm q-gutter-sm">
+      <q-card-actions class="q-pt-none" align="right">
+        <div class="q-mx-sm">
           <q-btn
             label="닫기"
             style="width: 5rem"
