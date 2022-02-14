@@ -135,6 +135,7 @@ async function command(args) {
         case 'aux':
           if (!args.buschannel) {
             error = 'AUX Buses Channel Error'
+            break
           } else {
             bus = uis[ui.ipaddress].aux(args.buschannel)
             if (args.channeltype) {
@@ -147,6 +148,7 @@ async function command(args) {
         case 'fx':
           if (!args.buschannel) {
             error = 'FX Buses Channel Error'
+            break
           } else {
             bus = uis[ui.ipaddress].fx(args.buschannel)
             if (args.channeltype) {
@@ -159,6 +161,7 @@ async function command(args) {
         case 'hw':
           if (!args.buschannel) {
             error = 'HW Buses Channel Error'
+            break
           }
           bus = uis[ui.ipaddress].hw(args.buschannel)
           rt = await hardware(bus, ui, args)
@@ -169,6 +172,7 @@ async function command(args) {
         case 'headphone':
           if (!args.buschannel) {
             error = 'HEADPHONE Buses Channel Error'
+            break
           }
           rt = await solo(
             uis[ui.ipaddress].headphone(args.buschannel),
@@ -179,6 +183,7 @@ async function command(args) {
         case 'mutegroup':
           if (!args.buschannel) {
             error = 'MUTEGROUP Buses Channel Error'
+            break
           }
           rt = await muteGroup(
             uis[ui.ipaddress].muteGroup(args.buschannel),
@@ -197,6 +202,7 @@ async function command(args) {
           break
         default:
           error = 'Unknown Mix Bus'
+          break
       }
 
       if (error) {

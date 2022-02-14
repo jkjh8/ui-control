@@ -20,7 +20,7 @@ async function hardware(ui, device, args) {
         rt = await func.setPhantom(ui, device, args.value)
         break
       case 'getphantom':
-        rt = await func.getPhantom(ui, device)
+        rt = await func.phantom$(ui, device)
         break
       default:
         error = 'Unknow Command'

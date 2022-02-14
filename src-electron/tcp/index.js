@@ -43,8 +43,8 @@ function createServer(port) {
           const r = await ui.command(args)
           write(socket, r)
         } catch (e) {
-          console.error(e)
-          write(socket, e.message)
+          console.error('socket error', e)
+          write(socket, e)
         }
       })
     })

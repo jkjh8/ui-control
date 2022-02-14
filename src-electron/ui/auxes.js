@@ -7,93 +7,93 @@ async function aux_master(ui, device, args) {
 
     const command = args.command.toLowerCase()
     switch (command) {
-      case 'setfaderlevel':
-        rt = await func.setFaderLevel(ui, device, args.value)
-        break
-      case 'setfaderleveldb':
-        rt = await func.setFaderLevelDB(ui, device, args.value)
-        break
-      case 'changefaderleveldb':
-        rt = await func.changeFaderLevelDB(ui, device, args.value)
-        break
-      case 'fadeto':
-        rt = await func.fadeTo(ui, device, args.value, args.time)
-        break
-      case 'fadetodb':
-        rt = await func.fadeToDB(ui, device, args.value, args.time)
-        break
-      case 'mute':
-        rt = await func.mute(ui, device)
-        break
-      case 'unmute':
-        rt = await func.unmute(ui, device)
-        break
-      case 'setmute':
-        rt = await func.setMute(ui, device, value)
-        break
-      case 'togglemute':
-        rt = await func.toggleMute(ui, device)
-        break
-      case 'pan':
-        rt = await func.pan(ui, device, args.value)
-        break
-      case 'solo':
-        rt = await func.solo(current, device)
-        break
-      case 'unsolo':
-        rt = await func.unsolo(current, device)
-        break
-      case 'togglesolo':
-        rt = await func.toggleSolo(current, device)
-        break
+      // case 'setfaderlevel':
+      //   rt = await func.setFaderLevel(ui, device, args.value)
+      //   break
+      // case 'setfaderleveldb':
+      //   rt = await func.setFaderLevelDB(ui, device, args.value)
+      //   break
+      // case 'changefaderleveldb':
+      //   rt = await func.changeFaderLevelDB(ui, device, args.value)
+      //   break
+      // case 'fadeto':
+      //   rt = await func.fadeTo(ui, device, args.value, args.time)
+      //   break
+      // case 'fadetodb':
+      //   rt = await func.fadeToDB(ui, device, args.value, args.time)
+      //   break
+      // case 'mute':
+      //   rt = await func.mute(ui, device)
+      //   break
+      // case 'unmute':
+      //   rt = await func.unmute(ui, device)
+      //   break
+      // case 'setmute':
+      //   rt = await func.setMute(ui, device, value)
+      //   break
+      // case 'togglemute':
+      //   rt = await func.toggleMute(ui, device)
+      //   break
+      // case 'pan':
+      //   rt = await func.pan(ui, device, args.value)
+      //   break
+      // case 'solo':
+      //   rt = await func.solo(ui, device)
+      //   break
+      // case 'unsolo':
+      //   rt = await func.unsolo(ui, device)
+      //   break
+      // case 'togglesolo':
+      //   rt = await func.toggleSolo(ui, device)
+      //   break
 
       // aux
-      case 'pre':
-        rt = await func.pre(current, device)
-        break
+      // case 'pre':
+      //   rt = await func.pre(ui, device)
+      //   break
 
-      case 'post':
-        rt = await func.post(current, device)
-        break
+      // case 'post':
+      //   rt = await func.post(ui, device)
+      //   break
 
-      case 'togglepost':
-        rt = await func.togglePost(current, device)
-        break
+      // case 'togglepost':
+      //   rt = await func.togglePost(ui, device)
+      //   break
 
-      case 'setpost':
-        rt = await func.setPost(current, device, args.value)
-        break
+      // case 'setpost':
+      //   rt = await func.setPost(ui, device, args.value)
+      //   break
 
-      case 'preproc':
-        rt = await func.preProc(current, device)
-        break
+      // case 'preproc':
+      //   rt = await func.preProc(ui, device)
+      //   break
 
-      case 'postproc':
-        rt = await func.postProc(current, device)
-        break
+      // case 'postproc':
+      //   rt = await func.postProc(ui, device)
+      //   break
 
-      case 'setpostproc':
-        rt = await func.setPostProc(current, device, args.value)
-        break
+      // case 'setpostproc':
+      //   rt = await func.setPostProc(ui, device, args.value)
+      //   break
 
-      case 'getfaderlevel':
-        rt = await func.faderLevel$(ui, device)
-        break
-      case 'getfaderleveldb':
-        rt = await func.faderLevelDB$(ui, device)
-        break
-      case 'getpan':
-        rt = await func.pan$(ui, device)
-        break
-      case 'getmute':
-        rt = await func.mute$(current, device)
-        break
-      case 'getsolo':
-        rt = await func.solo$(currnet, device)
-        break
-      case 'getpost':
-        rt = await func.post$(current, device)
-        break
+      // case 'getfaderlevel':
+      //   rt = await func.faderLevel$(ui, device)
+      //   break
+      // case 'getfaderleveldb':
+      //   rt = await func.faderLevelDB$(ui, device)
+      //   break
+      // case 'getpan':
+      //   rt = await func.pan$(ui, device)
+      //   break
+      // case 'getmute':
+      //   rt = await func.mute$(ui, device)
+      //   break
+      // case 'getsolo':
+      //   rt = await func.solo$(ui, device)
+      //   break
+      // case 'getpost':
+      //   rt = await func.post$(ui, device)
+      //   break
 
       default:
         error = 'Unknown Command'
