@@ -22,7 +22,7 @@ async function player(ui, device, args) {
       case 'prev':
         rt = await func.prev(ui, device)
         break
-      case 'loadPlaylist':
+      case 'loadplaylist':
         if (!args.list) {
           error = 'Unkown List'
           break
@@ -46,17 +46,17 @@ async function player(ui, device, args) {
       case 'toggleshuffle':
         rt = await func.toggleShuffle(ui, device)
         break
-      case 'setPlayMode':
+      case 'setplaymode':
         if (!args.mode) {
           error = 'Unkown Mode'
           break
         }
         rt = await func.setPlayMode(ui, device, args.mode)
         break
-      case 'setManual':
+      case 'setmanual':
         rt = await func.setManual(ui, device)
         break
-      case 'setAuto':
+      case 'setauto':
         rt = await func.setAuto(ui, device)
         break
 

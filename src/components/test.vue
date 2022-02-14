@@ -26,6 +26,7 @@
               dense
               filled
               :options="devices"
+              option-value="id"
               emit-value
               map-options
               label="Device"
@@ -63,6 +64,8 @@
               </template>
             </q-select>
           </div>
+
+          <!-- bus -->
           <q-select
             v-model="bus"
             filled
@@ -75,10 +78,16 @@
               'player',
               'mutegroup',
               'recorder',
-              'hardware',
-              'show',
-              'solo'
+              'show'
             ]"
+          />
+          <q-input
+            v-if="bus === 'aux' || bus === 'fx'"
+            v-model="buschannel"
+            filled
+            dense
+            label="Bus Channel"
+            type="number"
           />
           <!-- channel type -->
           <q-select
@@ -90,33 +99,285 @@
             :options="['input', 'line', 'player', 'aux', 'fx', 'sub', 'vca']"
             clearable
           />
+          <q-select
+            v-if="bus === 'aux'"
+            v-model="channeltype"
+            filled
+            dense
+            label="Channel Type"
+            :options="['input', 'line', 'player', 'fx']"
+            clearable
+          />
+          <q-select
+            v-if="bus === 'fx'"
+            v-model="channeltype"
+            filled
+            dense
+            label="Channel Type"
+            :options="['input', 'line', 'player', 'sub']"
+            clearable
+          />
           <!-- channel -->
           <q-input
-            v-if="channeltype"
+            v-if="channeltype && bus !== 'mutegroup'"
             v-model="channel"
             filled
             dense
             label="Channel"
             type="number"
           />
-          <!-- command -->
           <q-select
+            v-if="bus === 'mutegroup'"
+            v-model="channel"
+            filled
+            dense
+            label="Channel"
+            :options="[1, 2, 'fx', 'all']"
+          />
+          <!-- command -->
+          <!-- master -->
+          <q-select
+            v-if="bus === 'master' && channeltype === null"
             v-model="command"
             filled
             dense
             label="Command"
-            :options="['setfaderleveldb', 'pan', 'getfaderleveldb', 'getpan']"
+            :options="[
+              'setfaderlevel',
+              'setfaderleveldb',
+              'changefaderleveldv',
+              'fadeto',
+              'fadetodb',
+              'pan',
+              'getfaderlevel',
+              'getfaderleveldb',
+              'getpan'
+            ]"
+          />
+          <!-- master channel -->
+          <q-select
+            v-if="bus === 'master' && channeltype !== null"
+            v-model="command"
+            filled
+            dense
+            label="Command"
+            :options="[
+              'setfaderlevel',
+              'setfaderleveldb',
+              'changefaderleveldv',
+              'fadeto',
+              'fadetodb',
+              'setmute',
+              'mute',
+              'unmute',
+              'togglemute',
+              'getmute',
+              'pan',
+              'setsolo',
+              'solo',
+              'unsolo',
+              'togglesolo',
+              'getfaderlevel',
+              'getfaderleveldb',
+              'getsolo',
+              'getpan'
+            ]"
+          />
+          <q-select
+            v-if="bus === 'aux'"
+            v-model="command"
+            filled
+            dense
+            label="Command"
+            :options="[
+              'pan',
+              'pre',
+              'post',
+              'togglepost',
+              'setpost',
+              'preproc',
+              'postproc',
+              'setpostproc',
+              'getpost',
+              'getpan'
+            ]"
+          />
+          <q-select
+            v-if="bus === 'fx'"
+            v-model="command"
+            filled
+            dense
+            label="Command"
+            :options="['pre', 'post', 'setpost', 'getpost']"
+          />
+          <q-select
+            v-if="bus === 'mutegroup'"
+            v-model="command"
+            filled
+            dense
+            label="Command"
+            :options="['mute', 'unmute', 'toggle', 'getstate']"
+          />
+          <q-select
+            v-if="bus === 'player'"
+            v-model="command"
+            filled
+            dense
+            label="Command"
+            :options="[
+              'play',
+              'pause',
+              'stop',
+              'next',
+              'prev',
+              'loadplaylist',
+              'loadtrack',
+              'setshuffle',
+              'toggleshuffle',
+              'setplaymode',
+              'setmanual',
+              'setauto',
+              'getstate',
+              'getplaylist',
+              'gettrack',
+              'getlength',
+              'getelapsedtime',
+              'getremainingtime',
+              'getshuffle'
+            ]"
+          />
+          <q-select
+            v-if="bus === 'recorder'"
+            v-model="command"
+            filled
+            dense
+            label="Command"
+            :options="['recordtoggle', 'getbusy', 'getstate']"
+          />
+          <q-select
+            v-if="bus === 'show'"
+            v-model="command"
+            filled
+            dense
+            label="Command"
+            :options="['loadshow', 'loadsnapshot', 'loadcue']"
           />
           <!--  value  -->
           <q-input
-            v-if="command === 'setfaderleveldb' || command === 'pan'"
+            v-if="
+              command === 'loadshow' ||
+              command === 'loadsnapshot' ||
+              command === 'loadcue'
+            "
+            v-model="showname"
+            filled
+            dense
+            label="Show Name"
+          />
+          <q-input
+            v-if="command === 'loadsnapshot'"
+            v-model="snapshot"
+            filled
+            dense
+            label="Show Snapshot"
+          />
+          <q-input
+            v-if="command === 'loadcue'"
+            v-model="cue"
+            filled
+            dense
+            label="Show Cue"
+          />
+          <q-input
+            v-if="
+              command === 'setfaderlevel' ||
+              command === 'setfaderleveldb' ||
+              command === 'changefaderleveldb' ||
+              command === 'fadeto' ||
+              command === 'fadetodb' ||
+              command === 'pan' ||
+              command === 'setmute' ||
+              command === 'setsolo' ||
+              command === 'setpost' ||
+              command === 'setpostproc' ||
+              command === 'setshuffle'
+            "
             v-model="value"
             filled
             dense
             label="Command Value"
             type="number"
           />
-          <q-btn class="full-width" rounded unelevated color="primary"
+          <q-input
+            v-if="command === 'fadeto' || command === 'fadetodb'"
+            v-model="time"
+            filled
+            dense
+            label="Command Time(ms)"
+            type="number"
+          />
+          <q-input
+            v-if="
+              command === 'loadplaylist' ||
+              command === 'loadtrack' ||
+              command === 'changefaderleveldb' ||
+              command === 'fadeto' ||
+              command === 'fadetodb' ||
+              command === 'pan' ||
+              command === 'setmute' ||
+              command === 'setsolo' ||
+              command === 'setpost' ||
+              command === 'setpostproc'
+            "
+            v-model="list"
+            filled
+            dense
+            label="Play List"
+          />
+          <q-input
+            v-if="command === 'loadtrack'"
+            v-model="track"
+            filled
+            dense
+            type="number"
+            label="Play Track"
+          />
+          <q-select
+            v-if="command === 'setplaymode'"
+            v-model="mode"
+            filled
+            dense
+            label="Play Mode"
+            :options="['manual', 'auto']"
+          />
+          <div
+            class="q-gutter-x-sm"
+            style="max-width: 350px; word-break: break-all"
+          >
+            <span ref="testCode">
+              {{ code }}
+            </span>
+            <span>
+              <q-btn
+                round
+                flat
+                icon="svguse:icons.svg#copy"
+                size="sm"
+                color="green-10"
+                @click="fnCopy(code)"
+              >
+                <q-tooltip style="background: rgba(0, 0, 0, 0.5)">
+                  COPY
+                </q-tooltip>
+              </q-btn>
+            </span>
+          </div>
+          <q-btn
+            class="full-width"
+            rounded
+            unelevated
+            color="primary"
+            @click="send(code)"
             >SEND</q-btn
           >
         </div>
@@ -173,12 +434,20 @@ export default {
 
     const devices = computed(() => state.devices.devices)
     const selected = ref(null)
+    const testCode = ref(null)
     const replay = ref('')
-    const code = ref('')
+    const code = computed(() => {
+      return JSON.stringify(
+        Object.entries({ id: selected.value, ...command }).reduce(
+          (a, [k, v]) => (v === null ? a : ((a[k] = v), a)),
+          {}
+        )
+      )
+    })
     const command = reactive({
-      bus: '',
+      bus: null,
       buschannel: null,
-      channeltype: '',
+      channeltype: null,
       channel: null,
       value: null,
       list: null,
@@ -189,12 +458,15 @@ export default {
       command: null
     })
 
-    function send() {
+    function send(code) {
       window.FN.onRequest({
         command: 'test',
-        device: selected.value.ipaddress,
-        code: code.value
+        code: code
       })
+    }
+
+    async function fnCopy(args) {
+      await navigator.clipboard.writeText(args)
     }
 
     onMounted(() => {
@@ -210,6 +482,8 @@ export default {
       devices,
       code,
       send,
+      testCode,
+      fnCopy,
       dialogRef,
       onDialogHide,
       onCancelClick: onDialogCancel

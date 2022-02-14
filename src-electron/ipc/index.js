@@ -76,10 +76,26 @@ ipcMain.on('onRequest', async (e, args) => {
       case 'stop_server':
         distoryServer()
         break
+      case 'test':
+        let testCode
+        try {
+          testCode = JSON.parse(args.code)
+        } catch (e) {
+          console.log(e)
+          BrowserWindow.fromId(1).webContents.send('replay', 'Not Json Type')
+          break
+        }
+        const r = await ui.command(testCode)
+        console.log(r)
+        BrowserWindow.fromId(1).webContents.send('replay', r)
+        break
       default:
         console.log(args)
     }
   } catch (e) {
     console.error('ipc', e)
+    if (e.message) {
+      BrowserWindow.fromId(1).webContents.send('replay', e.message)
+    }
   }
 })

@@ -59,6 +59,11 @@
     <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
   </symbol>
 
+  <symbol id="copy" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+    <path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" />
+    <path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h8a2 2 0 00-2-2H5z" />
+  </symbol>
+
   <symbol id="ethernet" x="0px" y="0px" viewBox="0 0 503.607 503.607" style="enable-background:new 0 0 503.607 503.607;" xml:space="preserve">
     <g transform="translate(1 1)">
       <polygon style="fill:#FFE100;" points="292.77,326.344 208.836,326.344 175.262,200.443 175.262,108.115 326.344,108.115 326.344,200.443"/>

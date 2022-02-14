@@ -10,10 +10,10 @@ async function recorder(ui, device, args) {
       case 'recordtoggle':
         rt = await func.recordToggle(ui, device)
         break
-      case 'busy':
+      case 'getbusy':
         rt = await func.busy$(ui, device)
         break
-      case 'state':
+      case 'getstate':
         rt = await func.recording$(ui, device)
         break
 

@@ -2,7 +2,7 @@ import { SoundcraftUI } from 'soundcraft-ui-connection'
 import db from '../db'
 import { refreshList } from '../functions'
 import { master, masterchannels } from './master'
-import { aux_master, aux_channels } from './auxes'
+import aux from './auxes'
 import { fx_master, fx_channels } from './fx'
 import hardware from './hw'
 import solo from './solo'
@@ -113,7 +113,7 @@ async function command(args) {
       let bus
       let error = null
       let rt = null
-
+      console.log(args)
       if (!args.id) {
         resolve('ID Error')
       }
@@ -136,14 +136,18 @@ async function command(args) {
           if (!args.buschannel) {
             error = 'AUX Buses Channel Error'
             break
-          } else {
-            bus = uis[ui.ipaddress].aux(args.buschannel)
-            if (args.channeltype) {
-              rt = await aux_channels(bus, ui, args)
-            } else {
-              rt = await aux_master(bus, ui, args)
-            }
           }
+          if (!args.channeltype) {
+            error = 'Please Select Channeltype'
+            break
+          }
+          if (!args.channel) {
+            error = 'Please Select Channel'
+            break
+          }
+          bus = uis[ui.ipaddress].aux(args.buschannel)
+          rt = await aux(bus, ui, args)
+
           break
         case 'fx':
           if (!args.buschannel) {
