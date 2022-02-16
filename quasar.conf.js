@@ -216,7 +216,8 @@ module.exports = configure(function (ctx) {
           oneClick: false,
           allowToChangeInstallationDirectory: true
         },
-        extraFiles: [{ from: 'public', to: 'resources', filter: ['**/*'] }]
+        extraFiles: [{ from: 'public', to: 'resources', filter: ['**/*'] }],
+        extraResources: [{ from: 'public', to: 'assets', filter: ['**/*'] }]
       },
 
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain

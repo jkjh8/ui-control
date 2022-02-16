@@ -2,7 +2,7 @@ import { app, Menu, Tray, nativeImage, BrowserWindow, dialog } from 'electron'
 import path from 'path'
 import db from '../db'
 
-const img_path = process.env.DEV ? 'public/menu' : process.resourcesPath
+const img_path = process.env.DEV ? 'public' : process.resourcesPath
 
 const img_show = nativeImage.createFromPath(path.join(img_path, 'max.png'))
 const img_hide = nativeImage.createFromPath(path.join(img_path, 'min.png'))
@@ -80,20 +80,20 @@ async function createMainMenu(bos, swti) {
             changeMenuState()
           }
         },
-        {
-          label: 'show dialog',
-          type: 'normal',
-          click: () => {
-            dialog
-              .showMessageBox({
-                message: '123',
-                buttons: ['cancel', 'ok']
-              })
-              .then((r) => {
-                console.log(r)
-              })
-          }
-        },
+        // {
+        //   label: 'show dialog',
+        //   type: 'normal',
+        //   click: () => {
+        //     dialog
+        //       .showMessageBox({
+        //         message: '123',
+        //         buttons: ['cancel', 'ok']
+        //       })
+        //       .then((r) => {
+        //         console.log(r)
+        //       })
+        //   }
+        // },
         { type: 'separator' },
         isMac
           ? {
@@ -112,29 +112,29 @@ async function createMainMenu(bos, swti) {
       ]
     },
     // { role: 'editMenu' }
-    {
-      label: 'Edit',
-      submenu: [
-        { role: 'undo' },
-        { role: 'redo' },
-        { type: 'separator' },
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
-        ...(isMac
-          ? [
-              { role: 'pasteAndMatchStyle' },
-              { role: 'delete' },
-              { role: 'selectAll' },
-              { type: 'separator' },
-              {
-                label: 'Speech',
-                submenu: [{ role: 'startSpeaking' }, { role: 'stopSpeaking' }]
-              }
-            ]
-          : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }])
-      ]
-    },
+    // {
+    //   label: 'Edit',
+    //   submenu: [
+    //     { role: 'undo' },
+    //     { role: 'redo' },
+    //     { type: 'separator' },
+    //     { role: 'cut' },
+    //     { role: 'copy' },
+    //     { role: 'paste' },
+    //     ...(isMac
+    //       ? [
+    //           { role: 'pasteAndMatchStyle' },
+    //           { role: 'delete' },
+    //           { role: 'selectAll' },
+    //           { type: 'separator' },
+    //           {
+    //             label: 'Speech',
+    //             submenu: [{ role: 'startSpeaking' }, { role: 'stopSpeaking' }]
+    //           }
+    //         ]
+    //       : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }])
+    //   ]
+    // },
     // { role: 'viewMenu' }
     // { role: 'windowMenu' }
     {
@@ -159,13 +159,13 @@ async function createMainMenu(bos, swti) {
     {
       role: 'help',
       submenu: [
-        {
-          label: 'Learn More',
-          click: async () => {
-            const { shell } = require('electron')
-            await shell.openExternal('https://electronjs.org')
-          }
-        },
+        // {
+        //   label: 'Learn More',
+        //   click: async () => {
+        //     const { shell } = require('electron')
+        //     await shell.openExternal('https://electronjs.org')
+        //   }
+        // },
         {
           label: 'Help',
           type: 'normal',

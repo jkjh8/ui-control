@@ -174,7 +174,7 @@ export default {
         componentProps: { item: item }
       }).onOk((rt) => {
         rt.id = Number(rt.id)
-        window.FN.onRequest({ command: 'add', value: JSON.stringify(rt) })
+        window.FN.onRequest({ command: 'edit', value: JSON.stringify(rt) })
       })
     }
 

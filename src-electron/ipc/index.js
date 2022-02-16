@@ -24,17 +24,9 @@ ipcMain.handle('checkIp', async (e, ip) => {
   }
 })
 
-ipcMain.handle('checkServer', async () => {
-  const r = await db.setup.findOne({ section: 'server' })
-  if (r && r.status) {
-    return { status: r.status, port: r.port }
-  } else {
-    return { status: false }
-  }
-})
-
 ipcMain.on('onRequest', async (e, args) => {
   console.log('ipcmain', args)
+  let r
   try {
     switch (args.command) {
       case 'refresh':
@@ -43,6 +35,11 @@ ipcMain.on('onRequest', async (e, args) => {
       case 'add':
         const newDevice = JSON.parse(args.value)
         await addNewDevice(newDevice)
+        await refreshList()
+        break
+      case 'edit':
+        const newValue = JSON.parse(args.value)
+        await db.list.update({ _id: newValue._id }, { $set: newValue })
         await refreshList()
         break
       case 'delete':
@@ -63,8 +60,23 @@ ipcMain.on('onRequest', async (e, args) => {
         break
       // check last status and connect at start
       case 'start':
-        const devices = await db.list.find()
-        devices.forEach(async (device) => {
+        r = await db.setup.findOne({ section: 'server' })
+        if (r && r.status) {
+          createServer(r.port)
+          BrowserWindow.fromId(1).webContents.send('onResponse', {
+            command: 'server',
+            status: r.status,
+            port: r.port
+          })
+        } else {
+          BrowserWindow.fromId(1).webContents.send('onResponse', {
+            command: 'server',
+            status: false,
+            port: r.port
+          })
+        }
+        r = await db.list.find()
+        r.forEach(async (device) => {
           if (device.status === 'Connect') {
             await ui.connect(device.ipaddress)
           }
@@ -85,7 +97,7 @@ ipcMain.on('onRequest', async (e, args) => {
           BrowserWindow.fromId(1).webContents.send('replay', 'Not Json Type')
           break
         }
-        const r = await ui.command(testCode)
+        r = await ui.command(testCode)
         console.log(r)
         BrowserWindow.fromId(1).webContents.send('replay', r)
         break

@@ -109,13 +109,13 @@ export default defineComponent({
               commit('devices/updateDevices', args.value)
               break
 
-            case 'server':
-              console.log('server', args)
-              commit('setup/updateServerStatus', args.status)
-              if (args.port) {
-                commit('setup/updateServerPort', args.port)
-              }
-              break
+            // case 'server':
+            //   console.log('server', args)
+            //   commit('setup/updateServerStatus', args.status)
+            //   if (args.port) {
+            //     commit('setup/updateServerPort', args.port)
+            //   }
+            //   break
             case 'help':
               fnHelp()
               break
@@ -128,15 +128,15 @@ export default defineComponent({
         }
       })
 
-      const r = await window.FN.checkServer()
-      await window.FN.onRequest({ command: 'start' })
-      if (r && r.status) {
-        window.FN.onRequest({ command: 'start_server', port: r.port })
-        commit('setup/updateServerStatus', r.status)
-        commit('setup/updateServerPort', r.port)
-      } else {
-        commit('setup/updateServerStatus', false)
-      }
+      // const r = await window.FN.checkServer()
+      // await window.FN.onRequest({ command: 'start' })
+      // if (r && r.status) {
+      //   window.FN.onRequest({ command: 'start_server', port: r.port })
+      //   commit('setup/updateServerStatus', r.status)
+      //   commit('setup/updateServerPort', r.port)
+      // } else {
+      //   commit('setup/updateServerStatus', false)
+      // }
     })
 
     return {

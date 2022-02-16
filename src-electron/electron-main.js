@@ -1,4 +1,4 @@
-import { app, BrowserWindow, nativeTheme } from 'electron'
+import { app, BrowserWindow, nativeTheme, dialog } from 'electron'
 import path from 'path'
 import os from 'os'
 import db from './db'
@@ -16,7 +16,21 @@ try {
   }
 } catch (_) {}
 
-let mainWindow
+let mainWindow = null
+
+app.requestSingleInstanceLock({ key: '1qw2e3r4aldkeos0slnxls9o123ads23' })
+app.on('second-instance', (e, argv, cwd) => {
+  console.log(e, argv, cwd)
+  dialog
+    .showMessageBox({
+      message: '중복 실행 오류',
+      buttons: ['ok']
+    })
+    .then((r) => {
+      console.log(r)
+    })
+  app.exit(0)
+})
 
 import { createMainMenu, createTrayMenu } from './menu'
 

@@ -6,7 +6,10 @@
         style="padding: 2% 5% 0 5%"
       >
         <div style="width: 100%">
-          <q-img :src="url" style="height: 50px; max-width: 200px" />
+          <q-img
+            src="soundcraft-by-harman-logo.png"
+            style="height: 50px; max-width: 200px"
+          />
           <q-spinner-radio v-if="serverStatus" color="cyan" />
         </div>
 
@@ -40,31 +43,16 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from 'vue'
-import { useStore } from 'vuex'
+import { defineComponent, ref, onBeforeMount } from 'vue'
 
 export default defineComponent({
   name: 'MainLayout',
   setup() {
-    const { state, commit } = useStore()
-
-    const url = ref(
-      process.env.DEV
-        ? 'soundcraft-by-harman-logo.png'
-        : `${process.resourcesPath}/soundcraft-by-harman-logo.png`
-    )
-    const port = computed({
-      get() {
-        return state.setup.server_port
-      },
-      set(v) {
-        return commit('setup/updateServerPort', v)
-      }
-    })
-    const serverStatus = computed(() => state.setup.server_status)
+    const port = ref(9999)
+    const serverStatus = ref(false)
 
     function connectServer() {
-      commit('setup/updateServerStatus', !serverStatus.value)
+      serverStatus.value = !serverStatus.value
       if (serverStatus.value) {
         window.FN.onRequest({ command: 'start_server', port: port.value })
       } else {
@@ -72,9 +60,26 @@ export default defineComponent({
       }
     }
 
+    onBeforeMount(async () => {
+      window.FN.onResponse((args) => {
+        console.log('server', args)
+
+        try {
+          if (args.command === 'server') {
+            port.value = args.port
+
+            serverStatus.value = args.status
+          }
+        } catch (e) {
+          console.error(e)
+        }
+      })
+
+      window.FN.onRequest({ command: 'start' })
+    })
+
     return {
       port,
-      url,
       serverStatus,
       connectServer
     }
